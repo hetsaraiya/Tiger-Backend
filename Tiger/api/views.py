@@ -446,3 +446,36 @@ class StoreCreationView(APIView):
             return Response({"message": "Store creation information stored and data saved."}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Missing required fields."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def getStoreProduts(request):
+    merchantdetails = request.GET.get("merchant")
+    page = request.GET.get("page", 1)
+    size = request.GET.get("size", 25)
+    products = Product.objects.filter(merchant__store__storeName=merchantdetails)[int(page) * int(size) - int(size):int(page) * int(size)]
+    data = []
+    for product in products:
+        data.append({
+            "name" : product.name,
+            "link" : product.link,
+            "category" : getattr(product.category, 'name', ""),
+            "subcategory" : getattr(product.subcategory, 'name', ""),
+            "product_description" : product.product_description,
+            "varients" : product.varients,
+            "image_url" : product.image_url,
+            "image_urls" : product.image_urls,
+            "brochure_files" : getattr(product, 'brochure_files.url', ""),
+            "cashback_url" : product.cashback_url,
+            "is_compared" : product.is_compared,
+            "brand" : product.brand,
+            "offer_type" : product.offer_type,
+            "basePrice" : product.basePrice,
+            "merchant" : product.merchant.name,
+            "rating" : product.rating,
+            "rating_count" : product.rating_count,
+            "review_count" : product.review_count,
+            "share_count " : product.share_count ,
+            "redirect_count" : product.redirect_count,
+        })
+    return Response(data)

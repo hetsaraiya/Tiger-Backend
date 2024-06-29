@@ -15,6 +15,7 @@ urlpatterns = [
     path("business-registration/", BusinessRegistrationView.as_view(), name='business-registration'),
     path("bank-details/", BankDetailsView.as_view(), name='bank-details'),
     path("store-creation/", StoreCreationView.as_view(), name='store-creation'),
+    path("getStoreProduts", getStoreProduts, name='getStoreProduts'),
 ]
 
 
